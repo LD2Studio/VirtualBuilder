@@ -1,0 +1,29 @@
+{
+  "name": "virtualbuilder",
+  "version": "0.0.1",
+  "description": "",
+  "module": "./dist/index.js",
+  "type": "module",
+  "directories": {
+    "example": "examples",
+    "lib": "lib"
+  },
+  "scripts": {
+    "build:lib": "vite build -c vite.lib.config.js",
+    "example:helloworld": "vite -c examples/helloworld/vite.config.js"
+  },
+  "devDependencies": {
+    "vite": "^8.0.13"
+  },
+  "peerDependencies": {
+    "three": "^0.184.0"
+  },
+  "dependencies": {
+    "@dimforge/rapier3d-compat": "^0.19.3",
+    "three": "^0.184.0",
+    "tweakpane": "^4.0.5"
+  },
+  "keywords": [],
+  "author": "Laurent Dethoor",
+  "license": "MIT"
+}
