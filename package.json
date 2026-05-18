@@ -4,10 +4,14 @@
   "description": "",
   "module": "./dist/index.js",
   "type": "module",
-  "directories": {
-    "example": "examples",
-    "lib": "lib"
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build:lib": "vite build -c vite.lib.config.js",
     "example:helloworld": "vite -c examples/helloworld/vite.config.js"

@@ -8,8 +8,36 @@
 <body>
     <script type="module">
         import { app } from '../../lib/main.js'
-        console.log(app.version)
-        console.log(app.renderer)
+        app.run({
+            interactive: true,
+            renderOptions: {
+                antialias: true,
+            }
+        })
+
+        const cubeDesc = {
+            name: 'My Cube',
+            rigid_bodies: [
+                {   id: 'rb1',
+                    // type: 'dynamic',
+                    meshes: [
+                        {
+                            geometry: {
+                                shape: 'box',
+                                size: [1, 1, 1]
+                            },
+                            visual: {
+                                color: 'limegreen',
+                            },
+                            // collider : true,
+                        }
+                    ],
+                    // position: [0, 0.5, 0],
+                    // rotation: [0, 0, 0],
+                }
+            ]
+        }
+        app.createAsset(cubeDesc)
     </script>
 </body>
 </html>
