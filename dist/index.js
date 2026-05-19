@@ -10799,7 +10799,7 @@ var ud = {
 	physics: null,
 	assetManager: null,
 	inputManager: null,
-	run(t = {}) {
+	init(t = {}) {
 		let { title: r = "Untitled", interactive: i = !1, vr: a = !1, ar: o = !1, monitor: s = !1, renderOptions: c = {}, colliderDebug: l = !1 } = t;
 		document.title = `${r} ${i ? "- Interactive" : ""}`, this.renderer = new e.WebGLRenderer(c), pd(), this.physics = new fr(this.scene, { colliderDebug: l }), this.assetManager = new pr(this.scene, this.physics), this.inputManager = new hr(), i && (ud.interactive = !0, ud.orbitalControls = new n($.camera, $.renderer.domElement), ud.orbitalControls.enableDamping = !0, this.outliner = new ld(this.scene, this.camera, ud.orbitalControls, this.renderer, this.physics)), this.renderer.setAnimationLoop(fd);
 	},
