@@ -5177,8 +5177,11 @@ var P = Object.freeze({
 await P.init();
 var fr = class extends P.World {
 	#e = 0;
-	constructor(t, { gravity: n = new P.Vector3(0, -9.81, 0), colliderDebug: r = !1 } = {}) {
-		console.log(`RAPIER.JS version ${P.version()}`), super(n), this.scene = t, this.colliderDebug = r, this.colliderHelper = new e.LineSegments(new e.BufferGeometry(), new e.LineBasicMaterial({
+	constructor(t, n) {
+		let r = new P.Vector3(0, -9.81, 0);
+		console.log(`RAPIER.JS version ${P.version()}`), super(r);
+		let i = n.colliderDebug ?? !1, a = this.integrationParameters;
+		a.contact_natural_frequency = n.contact_natural_frequency ?? 1, a.lengthUnit = n.lengthUnit ?? 1, a.numInternalPgsIterations = n.numInternalPgsIterations ?? 1, a.numSolverIterations = n.numSolverIterations ?? 4, this.scene = t, this.colliderDebug = i, this.colliderHelper = new e.LineSegments(new e.BufferGeometry(), new e.LineBasicMaterial({
 			color: 16777215,
 			vertexColors: !0
 		})), this.colliderHelper.frustumCulled = !1, this.scene.add(this.colliderHelper), this.updateCollidersHelper = () => {
@@ -5197,7 +5200,7 @@ var fr = class extends P.World {
 	}
 }, pr = class {
 	constructor(e, t) {
-		this.scene = e, this.world = t, this.assets = [], this.gltfLoader = new r();
+		this.scene = e, this.physics = t, this.assets = [], this.gltfLoader = new r(), this.xray = !1;
 	}
 	create(e) {
 		let t = new mr(e.name);
@@ -5205,7 +5208,7 @@ var fr = class extends P.World {
 			let e = this.#e(n);
 			e !== null && t.entities.push(e);
 		}
-		else return console.warn("Missing rigid bodies"), null;
+		else return null;
 		if (e.joints?.length > 0) for (let n of e.joints) {
 			let e = this.#t(n, t);
 			e !== null && (t.joints.push(e), t[e.id] = e);
@@ -5223,7 +5226,7 @@ var fr = class extends P.World {
 				n = P.RigidBodyDesc.dynamic();
 				break;
 		}
-		let r = n === null ? null : this.world.createRigidBody(n), i = new e.Group(), a = [];
+		let r = n === null ? null : this.physics.createRigidBody(n), i = new e.Group(), a = [];
 		if (t.meshes?.length > 0) for (let n of t.meshes) {
 			if (!n.geometry && !n.mesh) return console.warn("Missing geometry"), null;
 			if (n.mesh) {
@@ -5283,7 +5286,7 @@ var fr = class extends P.World {
 		}
 		else return console.error("Missing meshes"), null;
 		return a.length > 0 && a.forEach((e) => {
-			this.world.createCollider(e, r);
+			this.physics.createCollider(e, r);
 		}), t.position && (r && r.setTranslation(new P.Vector3(t.position[0], t.position[1], t.position[2])), i.position.set(t.position[0], t.position[1], t.position[2])), t.rotation && (r && r.setRotation(new e.Quaternion().setFromEuler(new e.Euler(t.rotation[0], t.rotation[1], t.rotation[2], t.rotation[3]))), i.rotation.set(t.rotation[0], t.rotation[1], t.rotation[2], t.rotation[3])), this.scene.add(i), {
 			id: t.id,
 			mesh: i,
@@ -5298,10 +5301,10 @@ var fr = class extends P.World {
 		let r = n.entities.find((e) => e.id === t.body_a), i = n.entities.find((e) => e.id === t.body_b), a = null, o, s, c, l, u;
 		switch (t.type) {
 			case "fixed":
-				t.position ? o = new e.Vector3(t.position[0], t.position[1], t.position[2]) : (o = new e.Vector3(0, 0, 0), o.addVectors(r.mesh.position, i.mesh.position).multiplyScalar(.5)), s = r.mesh.clone().worldToLocal(o.clone()), c = i.mesh.clone().worldToLocal(o.clone()), u = P.JointData.fixed(s, r.mesh.clone().quaternion.conjugate(), c, i.mesh.clone().quaternion.conjugate()), a = this.world.createImpulseJoint(u, r.rigidBody, i.rigidBody, !0);
+				t.position ? o = new e.Vector3(t.position[0], t.position[1], t.position[2]) : (o = new e.Vector3(0, 0, 0), o.addVectors(r.mesh.position, i.mesh.position).multiplyScalar(.5)), s = r.mesh.clone().worldToLocal(o.clone()), c = i.mesh.clone().worldToLocal(o.clone()), u = P.JointData.fixed(s, r.mesh.clone().quaternion.conjugate(), c, i.mesh.clone().quaternion.conjugate()), a = this.physics.createImpulseJoint(u, r.rigidBody, i.rigidBody, !0);
 				break;
 			case "revolute":
-				t.position ? o = new e.Vector3(t.position[0], t.position[1], t.position[2]) : (o = new e.Vector3(0, 0, 0), o.addVectors(r.mesh.position, i.mesh.position).multiplyScalar(.5)), l = t.axe ?? new e.Vector3(1, 0, 0), s = r.mesh.clone().worldToLocal(o.clone()), c = i.mesh.clone().worldToLocal(o.clone()), u = P.JointData.revolute(s, c, l), a = this.world.createImpulseJoint(u, r.rigidBody, i.rigidBody, !0);
+				t.position ? o = new e.Vector3(t.position[0], t.position[1], t.position[2]) : (o = new e.Vector3(0, 0, 0), o.addVectors(r.mesh.position, i.mesh.position).multiplyScalar(.5)), l = t.axe ?? new e.Vector3(1, 0, 0), s = r.mesh.clone().worldToLocal(o.clone()), c = i.mesh.clone().worldToLocal(o.clone()), u = P.JointData.revolute(s, c, l), a = this.physics.createImpulseJoint(u, r.rigidBody, i.rigidBody, !0);
 				break;
 			default: return console.warn("Unknown joint type: " + t.type), null;
 		}
@@ -5310,7 +5313,7 @@ var fr = class extends P.World {
 				id: t.id,
 				impulseJoint: a
 			};
-			case "revolute": return {
+			case "revolute": return a.configureMotorVelocity(0, 0), {
 				id: t.id,
 				impulseJoint: a,
 				set targetVelocity(e) {
@@ -5326,6 +5329,12 @@ var fr = class extends P.World {
 	async loadGLTF(e) {
 		return (await this.gltfLoader.loadAsync(e)).scene;
 	}
+	setXray(e) {
+		this.xray = e;
+		for (let t of this.assets) for (let n of t.entities) n.mesh && n.mesh.traverse((t) => {
+			t.isMesh && (t.material.transparent = e, t.material.opacity = e ? .5 : 1, t.material.needsUpdate = !0);
+		});
+	}
 }, mr = class {
 	constructor(e) {
 		this.name = e, this.entities = [], this.joints = [];
@@ -5338,6 +5347,7 @@ var fr = class extends P.World {
 		let i = this.#e.add(new e.Vector3(t, n, r));
 		this.#e = i;
 		for (let i of this.entities) i.mesh && i.mesh.position.add(new e.Vector3(t, n, r)), i.rigidBody && i.rigidBody.setTranslation(new P.Vector3(i.rigidBody.translation().x + t, i.rigidBody.translation().y + n, i.rigidBody.translation().z + r));
+		return this;
 	}
 	rotate(t, n, r) {
 		let i = new e.Euler(t, n, r);
@@ -5349,6 +5359,7 @@ var fr = class extends P.World {
 				t.rigidBody.setTranslation(n), t.rigidBody.setRotation(t.mesh.getWorldQuaternion(new e.Quaternion())), t.mesh.pivot = null;
 			}
 		}
+		return this;
 	}
 }, hr = class extends EventTarget {
 	constructor() {
@@ -5363,9 +5374,9 @@ var fr = class extends P.World {
 			this.pointer.x = e.clientX / window.innerWidth * 2 - 1, this.pointer.y = -e.clientY / window.innerHeight * 2 + 1;
 		});
 	}
-	addBinding(e = [], t) {
-		let n = new gr(e, t);
-		return this.inputs.push(n), n;
+	add(e = []) {
+		let t = new gr(e);
+		return this.inputs.push(t), t;
 	}
 	_down(e) {
 		let t = this.inputs.find((t) => t.keys.includes(e));
@@ -10695,11 +10706,11 @@ new Ma("4.0.5");
 //#endregion
 //#region lib/ui/outliner.js
 var ld = class extends cd {
-	constructor(e, t, n, r, i) {
+	constructor(e, t, n, r, i, a) {
 		super({
 			title: "Settings",
 			expanded: !1
-		}), this.scene = e, this.camera = t, this.camControl = n, this.renderer = r, this.physics = i, this.#e(), this.#t(), this.#n();
+		}), this.scene = e, this.camera = t, this.camControl = n, this.renderer = r, this.physics = i, this.assetManager = a, this.#e(), this.#t(), this.#n(), this.#r();
 	}
 	#e() {
 		let e = this.addFolder({
@@ -10786,12 +10797,21 @@ var ld = class extends cd {
 			max: .01
 		});
 	}
+	#r() {
+		this.addFolder({
+			title: "🎨 Visual",
+			expanded: !1
+		}).addBinding(this.assetManager, "xray", { label: "X-Ray" }).on("change", (e) => {
+			this.assetManager.setXray(e.value);
+		});
+	}
 };
 console.log("VirtualBuilder version 0.0.1"), console.log(`THREE.JS version 0.${e.REVISION}`);
 var ud = {
 	interactive: !1,
 	orbitalControls: null
 }, $ = {
+	canvas: null,
 	renderer: null,
 	scene: new e.Scene(),
 	camera: new e.PerspectiveCamera(),
@@ -10799,16 +10819,16 @@ var ud = {
 	physics: null,
 	assetManager: null,
 	inputManager: null,
-	init(t = {}) {
-		let { title: r = "Untitled", interactive: i = !1, vr: a = !1, ar: o = !1, monitor: s = !1, renderOptions: c = {}, colliderDebug: l = !1 } = t;
-		document.title = `${r} ${i ? "- Interactive" : ""}`, this.renderer = new e.WebGLRenderer(c), pd(), this.physics = new fr(this.scene, { colliderDebug: l }), this.assetManager = new pr(this.scene, this.physics), this.inputManager = new hr(), i && (ud.interactive = !0, ud.orbitalControls = new n($.camera, $.renderer.domElement), ud.orbitalControls.enableDamping = !0, this.outliner = new ld(this.scene, this.camera, ud.orbitalControls, this.renderer, this.physics)), this.renderer.setAnimationLoop(fd);
+	init(e = {}) {
+		let { title: t = "Untitled", interactive: r = !1, vr: i = !1, ar: a = !1, monitor: o = !1, renderOptions: s = {}, physicsOptions: c = {} } = e;
+		document.title = `${t} ${r ? "- Interactive" : ""}`, pd(), md(s), hd(c), gd(), this.inputManager = new hr(), r && (ud.interactive = !0, ud.orbitalControls = new n($.camera, $.renderer.domElement), ud.orbitalControls.enableDamping = !0, _d()), this.renderer.setAnimationLoop(fd);
 	},
 	onRender: (e, t) => {},
 	createAsset(e) {
 		return this.assetManager.create(e);
 	},
-	addInput(e, t) {
-		return this.inputManager.addBinding(e, t);
+	addInput(e) {
+		return this.inputManager.add(e);
 	}
 }, dd = new e.Timer();
 dd.connect(document);
@@ -10818,9 +10838,24 @@ function fd(e) {
 	$.physics.update(t), $.assetManager.update(), $.onRender(n, t), $.renderer.render($.scene, $.camera), ud.interactive && ud.orbitalControls.update();
 }
 function pd() {
-	document.body.style.margin = 0, document.body.style.backgroundColor = "black", $.renderer.setSize(window.innerWidth, window.innerHeight), $.renderer.setPixelRatio(window.devicePixelRatio), document.body.appendChild($.renderer.domElement), $.camera.aspect = window.innerWidth / window.innerHeight, $.camera.updateProjectionMatrix(), $.camera.position.set(0, 0, 5), window.addEventListener("resize", () => {
-		$.camera.aspect = window.innerWidth / window.innerHeight, $.camera.updateProjectionMatrix(), $.renderer.setSize(window.innerWidth, window.innerHeight), $.renderer.setPixelRatio(window.devicePixelRatio);
+	document.body.style.margin = 0, document.body.style.height = "100vh", document.body.style.overflow = "hidden";
+}
+function md(t) {
+	$.canvas = document.createElement("canvas"), $.canvas.style.width = "100%", $.canvas.style.height = "100%", document.body.append($.canvas), $.renderer = new e.WebGLRenderer({
+		canvas: $.canvas,
+		antialias: t.antialias ?? !0
+	}), $.renderer.setSize($.canvas.clientWidth, $.canvas.clientHeight, !1), $.renderer.setPixelRatio(window.devicePixelRatio), $.camera.aspect = $.canvas.clientWidth / $.canvas.clientHeight, $.camera.updateProjectionMatrix(), $.camera.position.set(0, 0, 5), window.addEventListener("resize", () => {
+		$.camera.aspect = $.canvas.clientWidth / $.canvas.clientHeight, $.camera.updateProjectionMatrix(), $.renderer.setSize($.canvas.clientWidth, $.canvas.clientHeight, !1), $.renderer.setPixelRatio(window.devicePixelRatio);
 	});
+}
+function hd(e) {
+	$.physics = new fr($.scene, e);
+}
+function gd() {
+	$.assetManager = new pr($.scene, $.physics);
+}
+function _d() {
+	$.outliner = new ld($.scene, $.camera, ud.orbitalControls, $.renderer, $.physics, $.assetManager);
 }
 //#endregion
 export { e as THREE, $ as app };

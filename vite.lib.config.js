@@ -3,7 +3,7 @@ import { resolve } from 'node:path'
 export default {
     build: {
         lib: {
-            entry: resolve(__dirname, 'lib/main.js'),
+            entry: resolve(__dirname, 'lib/index.js'),
             name: 'VirtualBuilder',
             formats: ["es"],
             fileName: () => 'index.js',

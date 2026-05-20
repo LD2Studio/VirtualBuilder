@@ -1,4 +1,4 @@
-import { app } from '../../lib/main.js'
+import { app } from '../../lib/index.js'
 import { floorDesc } from './floor.js'
 app.init({
     interactive: true,
@@ -28,11 +28,6 @@ const cubeDesc = {
 }
 
 const cubeInput = app.addInput(['ArrowUp'])
-cubeInput.on( () => app.createAsset(cubeDesc) )
-
-
-// app.onRender = () => {
-//     if (cubeInput.pressed) {
-//         app.createAsset(cubeDesc)
-//     }
-// }
+cubeInput.on( () => {
+    app.createAsset(cubeDesc).translate(0,1,0)
+})

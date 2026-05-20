@@ -1,4 +1,4 @@
-import { app } from '../../lib/main.js'
+import { app } from '../../lib/index.js'
 app.init({
     interactive: true,
     renderOptions: {
@@ -29,13 +29,3 @@ const cubeDesc = {
     ]
 }
 app.createAsset(cubeDesc)
-
-const keyA = app.addInput(['KeyQ'])
-keyA.on(
-    () => { console.log('KeyA is pressed')},
-    () => { console.log('KeyA is released')}
-)
-
-app.onRender = () => {
-    // console.log(keyA.pressed)
-}
