@@ -35,7 +35,6 @@ keyA.on(
     () => { console.log('KeyA is pressed')},
     () => { console.log('KeyA is released')}
 )
-// console.log(keyA)
 
 app.onRender = () => {
     // console.log(keyA.pressed)

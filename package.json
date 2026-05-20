@@ -14,7 +14,8 @@
   ],
   "scripts": {
     "build:lib": "vite build -c vite.lib.config.js",
-    "example:helloworld": "vite -c examples/helloworld/vite.config.js"
+    "example:helloworld": "vite -c examples/helloworld/vite.config.js",
+    "example:rigidbodies": "vite -c examples/rigidbodies/vite.config.js"
   },
   "devDependencies": {
     "vite": "^8.0.13"
