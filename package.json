@@ -3,9 +3,10 @@
   "version": "0.0.1",
   "description": "",
   "module": "./dist/index.js",
-  "type": "module",
+  "types": "./dist/@types/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/@types/index.d.ts",
       "import": "./dist/index.js"
     }
   },
@@ -13,12 +14,14 @@
     "dist"
   ],
   "scripts": {
-    "build:lib": "vite build -c vite.lib.config.js",
+    "build:lib": "vite build -c vite.lib.config.js & tsc -p tsconfig.lib.json",
     "example:helloworld": "vite -c examples/helloworld/vite.config.js",
     "example:rigidbodies": "vite -c examples/rigidbodies/vite.config.js",
     "example:robot2wheels": "vite -c examples/robot-2-wheels/vite.config.js --open true"
   },
   "devDependencies": {
+    "@tweakpane/core": "^2.0.5",
+    "typescript": "^6.0.3",
     "vite": "^8.0.13"
   },
   "peerDependencies": {

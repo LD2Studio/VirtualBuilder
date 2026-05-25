@@ -10,7 +10,11 @@ export default {
         },
         rollupOptions: {
             // Mark three.js and all its submodules as external (peer dependency)
-            external: ['three', /^three\/.*/]
+            external: [
+                'three',
+                /^three\/.*/,
+                'tweakpane',
+            ]
         }
     }
 }
