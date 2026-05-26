@@ -5524,7 +5524,7 @@ var tr = {
 	inputManager: null,
 	init(e = {}) {
 		let { title: t = "Untitled", interactive: r = !1, vr: i = !1, ar: a = !1, monitor: o = !1, renderOptions: s = {}, physicsOptions: c = {} } = e;
-		document.title = `${t} ${r ? "- Interactive" : ""}`, ir(), ar(s), or(c), sr(), this.inputManager = new Qn(this.canvas), r && (tr.interactive = !0, tr.orbitalControls = new n($.camera, $.renderer.domElement), tr.orbitalControls.enableDamping = !0, cr()), this.renderer.setAnimationLoop(rr);
+		document.title = `${t} ${r ? "- Interactive" : ""}`, ir(), ar(s), or(c), sr(), this.inputManager = new Qn(this.canvas), r && (tr.interactive = !0, tr.orbitalControls = new n($.camera, $.renderer.domElement), tr.orbitalControls.enableDamping = !0, cr(), lr()), this.renderer.setAnimationLoop(rr);
 	},
 	loop: (e, t) => {},
 	onRender: (e, t) => {},
@@ -5559,6 +5559,10 @@ function sr() {
 	$.assetManager = new Xn($.scene, $.physics);
 }
 function cr() {
+	let t = new e.AxesHelper(5);
+	t.setColors(new e.Color("red"), new e.Color("green"), new e.Color("blue")), $.scene.add(t);
+}
+function lr() {
 	$.outliner = new er($.scene, $.camera, tr.orbitalControls, $.renderer, $.physics, $.assetManager);
 }
 //#endregion
